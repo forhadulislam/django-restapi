@@ -13,9 +13,18 @@ After installing the requirements run the command:
     
     python manage.py runserver
     
-OR to run on a specific port
+To run on a specific port:
     
     python manage.py runserver 8000
+    
+
+To load money to a customer's account use this command:
+    
+    python manage.py load_money customer_id float-amount currency(EUR, USD)
+    
+Example:
+    
+    python manage.py load_money 7d901219 30.0 EUR
     
     
 
