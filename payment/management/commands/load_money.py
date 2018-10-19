@@ -1,5 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from payment.models import Accounts, Transactions, Transfers
+from decimal import Decimal
 
 class Command(BaseCommand):
     help = 'Loads money to a specific account'
@@ -14,4 +16,16 @@ class Command(BaseCommand):
         amount = kwargs['amount']
         currency = kwargs['currency']
         
-        self.stdout.write("Deposited {0} {1} to account #{2}".format(amount, currency, cardholder))
+        try:
+            usedData = Accounts.objects.get(id=cardholder)
+            if usedData.currency == currency:
+                updatedAmount = Decimal(usedData.balance) + Decimal(amount)
+                
+                data_dict = {'balance': updatedAmount}
+                Accounts.objects.filter(id=cardholder).update(**data_dict)
+            
+                self.stdout.write("Deposited {0} {1} to account #{2}".format(amount, currency, cardholder))
+            else:
+                self.stdout.write("The account do accept the currency given")
+        except:
+            self.stdout.write("Error occured! Check the input and try again")
