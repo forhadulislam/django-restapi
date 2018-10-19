@@ -1,6 +1,3 @@
 
-# Holvi Exercise 
+## Django REST API Exercise
 
-Django REST API
-
-# django-restapi-holvi
