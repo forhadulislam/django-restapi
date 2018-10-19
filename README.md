@@ -22,6 +22,8 @@ To load money to a customer's account use this command:
     
     python manage.py load_money customer_id float-amount currency(EUR, USD)
     
+    # currency is case sensitive
+    
 Example:
     
     python manage.py load_money 7d901219 30.0 EUR
