@@ -21,7 +21,7 @@ class TransfersSerializer(serializers.ModelSerializer):
         model = Transfers
         fields = [
                 'id',
-                'receiver',
+                'payee',
                 'amount',
                 'timestamp',
             ]
@@ -37,9 +37,13 @@ class TransactionsSerializer(serializers.ModelSerializer):
                 'id',
                 'transfer',
                 'amount',
+                'currency',
+                'trtype',
+                'amount',
                 'timestamp',
             ]
             
         read_only_fields = [
                 'id'
             ]
+            

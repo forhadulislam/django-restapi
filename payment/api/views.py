@@ -4,6 +4,11 @@ from payment.models import Accounts, Transactions, Transfers
 
 from .serializers import AccountsSerializer, TransactionsSerializer
 
+class IssuerAPIView(generics.CreateAPIView):
+    
+    pass
+
+
 class AccountsAPIView(generics.CreateAPIView):
     
     lookup_field = 'pk'
