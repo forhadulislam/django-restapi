@@ -21,7 +21,10 @@ class TransfersSerializer(serializers.ModelSerializer):
         model = Transfers
         fields = [
                 'id',
-                'payee',
+                'transfer',
+                'amount',
+                'currency',
+                'trtype',
                 'amount',
                 'timestamp',
             ]
@@ -36,10 +39,8 @@ class TransactionsSerializer(serializers.ModelSerializer):
         fields = [
                 'id',
                 'transfer',
-                'amount',
-                'currency',
                 'trtype',
-                'amount',
+                'description',
                 'timestamp',
             ]
             

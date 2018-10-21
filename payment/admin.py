@@ -8,12 +8,11 @@ from payment.models import Accounts, Transfers, Transactions
 class AccountsAdmin(admin.ModelAdmin):
     list_display = ('id', 'balance','reserved','currency')
 
-
 class TransfersAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'payee','amount','currency','trtype','authorized','timestamp')
 
 class TransactionsAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'transfer','trtype','description','timestamp')
 
 admin.site.register(Accounts, AccountsAdmin)
 admin.site.register(Transfers, TransfersAdmin)
