@@ -35,10 +35,12 @@ class Accounts(models.Model):
 class Transfers(models.Model):
     #receiver = models.ForeignKey(Accounts, on_delete=models.CASCADE)
     payee = models.ForeignKey(Accounts, null=True)
+    txid = models.CharField(max_length=32, default="")
     amount = models.DecimalField(decimal_places=2, max_digits=9, default=0)
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default="EUR")
     trtype = models.CharField(max_length=3, choices=TRANASCTION_CHOICES, default="DBT")
     authorized = models.BooleanField(default=False)
+    presented = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     
     def __str__(self):

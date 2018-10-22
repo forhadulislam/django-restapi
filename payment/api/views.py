@@ -27,6 +27,7 @@ class IssuerAPIView(APIView):
             
             txtype = data['type']
             card_id = data['card_id']
+            tx_id = data['transaction_id']
             billing_amount = Decimal(data['billing_amount'])
             billing_currency = data['billing_currency']
             transaction_currency = data['transaction_currency']
@@ -39,9 +40,10 @@ class IssuerAPIView(APIView):
                     userAcc.balance = userAcc.balance - billing_amount
                     userAcc.reserved = userAcc.reserved + billing_amount
                     userAcc.save()
-                    newTransfer = Transfers(payee=userAcc, amount=billing_amount, currency=billing_currency, trtype="DBT", authorized=True)
+                    newTransfer = Transfers(payee=userAcc, txid=tx_id, amount=billing_amount, 
+                                            currency=billing_currency, trtype="DBT", authorized=True, 
+                                            presented=False)
                     newTransfer.save()
-                    #currentTransfer = Transfers.objects.get(id=newTransfer.id)
                     Transactions(transfer=newTransfer, trtype="DBT", description=userAcc.id).save()
                     Transactions(transfer=newTransfer, trtype="CDT", description="Issuer").save()
                     
@@ -52,8 +54,14 @@ class IssuerAPIView(APIView):
                 userAcc.reserved = userAcc.reserved - billing_amount
                 userAcc.save()
                 
+                getTx = Transfers(txid=tx_id)
+                getTx.presented = True
+                getTx.Save()
+                
+                status_code = status.HTTP_200_OK
+                
         except:
-            status_code = status.HTTP_404_NOT_FOUND
+            status_code = status.HTTP_403_FORBIDDEN
         
         return Response(status=status_code)
         
