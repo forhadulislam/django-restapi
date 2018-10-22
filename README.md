@@ -33,7 +33,7 @@ For receiving requests:
 
     URI : /api/issuer
     Query param: json
-    
+    Method: GET
     Value:
     {
       "type": "presentment",
