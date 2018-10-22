@@ -29,5 +29,24 @@ Example:
     
     python manage.py load_money 7d901219 30.0 EUR
     
+For receiving requests:
+
+    URI : /api/issuer
+    Query param: json
+    
+    Value:
+    {
+      "type": "presentment",
+      "card_id": "4321LOBO",
+      "transaction_id": "1234ZORRO",
+      "merchant_name": "authorisation",
+      "merchant_country": "US",
+      "merchant_mcc": "5139",
+      "billing_amount": "90.00",
+      "billing_currency": "EUR",
+      "transaction_amount": "100.00", 
+      "transaction_currency": "USD"
+    }
+    
     
 

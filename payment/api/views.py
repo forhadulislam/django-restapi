@@ -66,7 +66,6 @@ class IssuerAPIView(APIView):
         return Response(status=status_code)
         
 
-
 class AccountsAPIView(generics.CreateAPIView):
     
     lookup_field = 'pk'
