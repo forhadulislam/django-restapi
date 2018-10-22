@@ -8,11 +8,13 @@ from payment.models import Accounts, Transactions, Transfers
 
 from .serializers import AccountsSerializer, TransactionsSerializer
 
+# Considering Euro as the base currency 
 Currency_Values_Today = {
         'EUR': 1.0,
         'USD': 0.9
     }
 
+# The API View where the Scheme will send the request
 class IssuerAPIView(APIView):
     
     def get(self, request, *args, **kw):
@@ -27,20 +29,28 @@ class IssuerAPIView(APIView):
             card_id = data['card_id']
             billing_amount = Decimal(data['billing_amount'])
             billing_currency = data['billing_currency']
+            transaction_currency = data['transaction_currency']
+            transaction_amount = Decimal(data['transaction_amount'])
             
             userAcc = Accounts.objects.get(id=card_id)
             
-            if (userAcc.balance - userAcc.reserved) > billing_amount:
-                userAcc.reserved = userAcc.reserved + billing_amount
+            if txtype == "authorisation":
+                if (userAcc.balance - userAcc.reserved) > billing_amount:
+                    userAcc.balance = userAcc.balance - billing_amount
+                    userAcc.reserved = userAcc.reserved + billing_amount
+                    userAcc.save()
+                    newTransfer = Transfers(payee=userAcc, amount=billing_amount, currency=billing_currency, trtype="DBT", authorized=True)
+                    newTransfer.save()
+                    #currentTransfer = Transfers.objects.get(id=newTransfer.id)
+                    Transactions(transfer=newTransfer, trtype="DBT", description=userAcc.id).save()
+                    Transactions(transfer=newTransfer, trtype="CDT", description="Issuer").save()
+                    
+                    status_code = status.HTTP_200_OK
+                else:
+                    status_code = status.HTTP_403_FORBIDDEN
+            elif txtype == "presentment":
+                userAcc.reserved = userAcc.reserved - billing_amount
                 userAcc.save()
-                newTransfer = Transfers(payee=userAcc, amount=billing_amount, currency=billing_currency, trtype="DBT", authorized=True).save()
-                
-                Transactions(transfer=newTransfer, trtype="DBT", description=userAcc.id).save()
-                Transactions(transfer=newTransfer, trtype="CDT", description="Issuer").save()
-                
-                status_code = status.HTTP_200_OK
-            else:
-                status_code = status.HTTP_403_FORBIDDEN
                 
         except:
             status_code = status.HTTP_404_NOT_FOUND
